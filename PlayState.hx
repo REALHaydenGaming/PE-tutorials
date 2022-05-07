@@ -201,6 +201,12 @@ class PlayState extends MusicBeatState
 	var dodgeCooldown:Float = 0.1135;
 	var alert:FlxSprite;
 
+	//attack things
+	var attackTimer:Float = 5;
+	var attackDamage:Float = 1;
+	var ableToAttack:Bool = false;
+	var attacking:Bool = false;
+
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 	var dialogueJson:DialogueFile = null;
 
@@ -1115,7 +1121,7 @@ class PlayState extends MusicBeatState
 		timeBarBG.cameras = [camHUD];
 		timeTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
-
+	
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
 		// UI_camera.zoom = 1;
@@ -1259,6 +1265,7 @@ class PlayState extends MusicBeatState
 			healthBarBG.loadGraphic(Paths.image('shit/bluebar'));
 		}
 		ableToDodge = true;
+		ableToAttack = false;
 		if(curSong.toLowerCase() == "blammed" && ClientPrefs.shaders){
 			addShaderToCamera('camGame', new VCRDistortionEffect(0.1, true, true, true));
 			addShaderToCamera('camHUD', new VCRDistortionEffect(0.1, true, true, true));
@@ -2539,9 +2546,24 @@ function dodgeWarn(warnCanAppear:Bool = false){
 
 		super.update(elapsed);
 
-		if (FlxG.keys.justPressed.D)
-		boyfriend = new Boyfriend(0, 0, 'bf-car');
+		/*if (FlxG.keys.justPressed.D)
+		boyfriend = new Boyfriend(0, 0, SONG.player1 + '-car');*/
 		if (curSong.toLowerCase() == "pico"){
+			ableToAttack = true;
+			if (FlxG.keys.justPressed.SHIFT && ableToAttack && !attacking){
+				boyfriend.playAnim('pre-attack', true);
+				attacking = true;
+				ableToAttack = false;
+				dad.playAnim('singUp', true);
+				health += attackDamage;
+				new FlxTimer().start(0.2, function(tmr:FlxTimer){
+				boyfriend.playAnim('attack', true);
+				});
+				new FlxTimer().start(attackTimer, function(tmr:FlxTimer){
+				attacking = false;
+				ableToAttack = true;
+				});
+			}
 			if(FlxG.keys.justPressed.SPACE && !dodging && ableToDodge){
 				dodging = true;
 				boyfriend.playAnim('dodge');
