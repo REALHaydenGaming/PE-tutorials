@@ -282,6 +282,9 @@ class PlayState extends MusicBeatState
 	var boyfriendIdleTime:Float = 0.0;
 	var boyfriendIdled:Bool = false;
 
+	//character selection
+	var charSelection:Int = CharSelectState.curSelected;
+
 	// Lua shit
 	public static var instance:PlayState;
 	public var luaArray:Array<FunkinLua> = [];
@@ -874,7 +877,14 @@ class PlayState extends MusicBeatState
 		dadGroup.add(dad);
 		startCharacterLua(dad.curCharacter);
 		
-		boyfriend = new Boyfriend(0, 0, SONG.player1);
+		switch(charSelection){
+		case 0:
+		boyfriend = new Boyfriend(0, 0, 'bf');
+		case 1:
+		boyfriend = new Boyfriend(0, 0, 'bf-car');
+		default:
+		boyfriend = new Boyfriend(0, 0, 'bf');
+		}
 		startCharacterPos(boyfriend);
 		boyfriendGroup.add(boyfriend);
 		startCharacterLua(boyfriend.curCharacter);
@@ -4077,7 +4087,6 @@ function dodgeWarn(warnCanAppear:Bool = false){
 			// FlxG.log.add('played imss note');
 
 			/*boyfriend.stunned = true;
-
 			// get stunned for 1/60 of a second, makes you able to
 			new FlxTimer().start(1 / 60, function(tmr:FlxTimer)
 			{
