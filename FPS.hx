@@ -47,7 +47,7 @@ class FPS extends TextField
 		currentFPS = 144;
 		selectable = false;
 		mouseEnabled = true;
-		defaultTextFormat = new TextFormat("_sans", 13, color);
+		defaultTextFormat =  new TextFormat (Paths.font("vcr.ttf"), 13, color); //this is how to change you're fonts, piss babies
 		autoSize = LEFT;
 		multiline = true;
 		text = "FPS: ";
