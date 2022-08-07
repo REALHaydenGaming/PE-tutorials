@@ -1100,14 +1100,14 @@ class PlayState extends MusicBeatState
 		scoreTxt.visible = !ClientPrefs.hideHud;
 		add(scoreTxt);
 
-		watermark = new FlxText(scoreTxt.x + 30, scoreTxt.y, 0, "Psych Engine V:" + MainMenuState.psychEngineVersion, 20);
+		watermark = new FlxText(scoreTxt.x + 30, scoreTxt.y, 0, SONG.song + " | Psych Engine V:" + MainMenuState.psychEngineVersion, 20);
 		watermark.scrollFactor.set();
 		watermark.borderSize = 1.25;
 		watermark.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		watermark.visible = !ClientPrefs.hideHud;
 		add(watermark);
 
-		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "BOTPLAY", 32);
+		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "hi cheater :D", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.borderSize = 1.25;
@@ -2600,6 +2600,9 @@ function dodgeWarn(warnCanAppear:Bool = false){
 		} else {
 			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName + ' (' + Highscore.floorDecimal(ratingPercent * 100, 2) + '%)' + ' - ' + ratingFC;//peeps wanted no integer rating
 		}
+	        if(cpuControlled) {
+			scoreTxt.text = 'ugly ass cheater SMH'
+		}
 
 		if(botplayTxt.visible) {
 			botplaySine += 180 * elapsed;
@@ -2659,12 +2662,12 @@ function dodgeWarn(warnCanAppear:Bool = false){
 		if (health > 2)
 			health = 2;
 
-		if (healthBar.percent < 20)
+		if (healthBar.percent < 35)
 			iconP1.animation.curAnim.curFrame = 1;
 		else
 			iconP1.animation.curAnim.curFrame = 0;
 
-		if (healthBar.percent > 80)
+		if (healthBar.percent > 75)
 			iconP2.animation.curAnim.curFrame = 1;
 		else
 			iconP2.animation.curAnim.curFrame = 0;
@@ -2715,7 +2718,7 @@ function dodgeWarn(warnCanAppear:Bool = false){
 					if(secondsTotal < 0) secondsTotal = 0;
 
 					if(ClientPrefs.timeBarType != 'Song Name')
-						timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
+						timeTxt.text = SONG.song + ' (' + FlxStringUtil.formatTime(secondsTotal, false) + ')'; //i fucking hate bambi's purgatory 0% real
 				}
 			}
 
@@ -3467,7 +3470,7 @@ function dodgeWarn(warnCanAppear:Bool = false){
 		} else {
 			var achieve:String = checkForAchievement(['week1_nomiss', 'week2_nomiss', 'week3_nomiss', 'week4_nomiss',
 				'week5_nomiss', 'week6_nomiss', 'week7_nomiss', 'ur_bad',
-				'ur_good', 'hype', 'two_keys', 'toastie', 'debugger']);
+				'ur_good', 'hype', 'two_keys', 'toastie', 'debugger', 'test_achivement']);
 
 			if(achieve != null) {
 				startAchievement(achieve);
@@ -4727,7 +4730,8 @@ function dodgeWarn(warnCanAppear:Bool = false){
 			if (goods > 0) ratingFC = "GFC";
 			if (bads > 0 || shits > 0) ratingFC = "FC";
 			if (songMisses > 0 && songMisses < 10) ratingFC = "SDCB";
-			else if (songMisses >= 10) ratingFC = "Clear";
+                        if (songMisses >= 10) ratingFC = "Clear"
+			else if (songMisses >= 100) ratingFC = "cry motherfucker";
 		}
 		setOnLuas('rating', ratingPercent);
 		setOnLuas('ratingName', ratingName);
@@ -4805,6 +4809,10 @@ function dodgeWarn(warnCanAppear:Bool = false){
 						}
 					case 'debugger':
 						if(Paths.formatToSongPath(SONG.song) == 'test' && !usedPractice) {
+							unlock = true;
+						}
+                                         case 'test_achivement':
+						if(Paths.formatToSongPath(SONG.song) == 'Tutorial' && !usedPractice) {
 							unlock = true;
 						}
 				}
