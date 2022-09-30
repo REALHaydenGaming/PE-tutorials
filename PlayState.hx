@@ -1100,7 +1100,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.visible = !ClientPrefs.hideHud;
 		add(scoreTxt);
 
-		watermark = new FlxText(scoreTxt.x + 30, scoreTxt.y, 0, "Psych Engine V:" + MainMenuState.psychEngineVersion, 20);
+		watermark = new FlxText(scoreTxt.x + 30, scoreTxt.y, 0, SONG.song + " PE TUTORIALS " + MainMenuState.psychEngineVersion, 20);
 		watermark.scrollFactor.set();
 		watermark.borderSize = 1.25;
 		watermark.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -2596,9 +2596,9 @@ function dodgeWarn(warnCanAppear:Bool = false){
 		}
 
 		if(ratingName == '?') {
-			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName;
+			scoreTxt.text = 'Score: ' + songScore + ' | Combo Breaks: ' + songMisses + ' | Accuracy: ' + ratingName;
 		} else {
-			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName + ' (' + Highscore.floorDecimal(ratingPercent * 100, 2) + '%)' + ' - ' + ratingFC;//peeps wanted no integer rating
+			scoreTxt.text = 'Score: ' + songScore + ' | Combo Breaks: ' + songMisses + ' | Accuracy: ' + ratingName + ' (' + Highscore.floorDecimal(ratingPercent * 100, 2) + '%)' + ' - ' + ratingFC;//peeps wanted no integer rating
 		}
 
 		if(botplayTxt.visible) {
@@ -2715,7 +2715,7 @@ function dodgeWarn(warnCanAppear:Bool = false){
 					if(secondsTotal < 0) secondsTotal = 0;
 
 					if(ClientPrefs.timeBarType != 'Song Name')
-						timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
+						timeTxt.text = SONG.song + '( '+ FlxStringUtil.formatTime(secondsTotal, false) + ')';
 				}
 			}
 
@@ -3307,6 +3307,18 @@ function dodgeWarn(warnCanAppear:Bool = false){
 				}
 				reloadHealthBarColors();
 			
+			case 'Example Hardcoded Event':
+				// This was how to add in your own Hardcoded event.
+				// Let's use the popular event like Flashing Light's.
+				if (ClientPrefs.flashing) {
+				var colorFlash:Int = Std.parseInt(value1);
+				if(Math.isNaN(colorFlash)) colorFlash = 0;
+		
+				switch(colorFlash) {
+					case 0:
+						FlxG.camera.flash(FlxColor.WHITE, 0.9);
+				}
+			}
 			case 'BG Freaks Expression':
 				if(bgGirls != null) bgGirls.swapDanceType();
 			
@@ -3712,7 +3724,8 @@ function dodgeWarn(warnCanAppear:Bool = false){
 		}
 
 		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2));
-		rating.cameras = [camHUD];
+		// rating.cameras = [camHUD];
+		// Uncomment for a HUD version
 		rating.screenCenter();
 		rating.x = coolText.x - 40;
 		rating.y -= 60;
@@ -3724,7 +3737,8 @@ function dodgeWarn(warnCanAppear:Bool = false){
 		rating.y -= ClientPrefs.comboOffset[1];
 
 		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
-		comboSpr.cameras = [camHUD];
+		// comboSpr.cameras = [camHUD];
+		// Uncomment for a HUD version
 		comboSpr.screenCenter();
 		comboSpr.x = coolText.x;
 		comboSpr.acceleration.y = 600;
@@ -3766,7 +3780,8 @@ function dodgeWarn(warnCanAppear:Bool = false){
 		for (i in seperatedScore)
 		{
 			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
-			numScore.cameras = [camHUD];
+			// numScore.cameras = [camHUD];
+			// Uncomment for a HUD version.
 			numScore.screenCenter();
 			numScore.x = coolText.x + (43 * daLoop) - 90;
 			numScore.y += 80;
@@ -3790,7 +3805,9 @@ function dodgeWarn(warnCanAppear:Bool = false){
 			numScore.velocity.x = FlxG.random.float(-5, 5);
 			numScore.visible = !ClientPrefs.hideHud;
 
-			//if (combo >= 10 || combo == 0)
+			if (combo >= 5)
+			        insert(members.indexOf(strumLineNotes), comboSpr);
+			else
 				insert(members.indexOf(strumLineNotes), numScore);
 
 			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
